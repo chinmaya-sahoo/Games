@@ -11,20 +11,18 @@ function App() {
   const [blankBullet, setBlankBullet] = useState(4);
   const [totalBullet, setTotalBullet] = useState(8);
   const [bullets, setBullets] = useState([]); // Array to store the bullet sequence
-  const [currentBulletIndex, setCurrentBulletIndex] = useState(0); // Tracks the current bullet being fired
+  const [currentBulletIndex, setCurrentBulletIndex] = useState(0);// Tracks the current bullet being fired
   const [isPlaying, setIsPlaying] = useState(true);
   const [isAllowed, setIsAllowed] = useState(true);
   const [cigarCount, setCigarCount] = useState(0);
   const [magnifyCount, setMagnifyCount] = useState(0);
   const [isHealable, setIsHealable] = useState(true);
   const [playerTurn, setPlayerTurn] = useState(true);
-  // const [dealerTurn, setDealerTurn] = useState(false)
   const [isGameOver, setIsGameOver] = useState(false);
-
   /*
-  lunch page ->
-  states(health ,live , blank ,isPlaying , total , isAllowed , cigarCount , magnifyCount , isHealable , playerTurn , isGameOver , playerName)
-  */
+lunch page ->
+states(health ,live , blank ,isPlaying , total , isAllowed , cigarCount , magnifyCount , isHealable , playerTurn , isGameOver , playerName)
+*/
   const genRandomNumber = () => {
     return Math.floor(Math.random() * 4) + 1;
   };
@@ -54,6 +52,8 @@ function App() {
     setBullets(shuffledBullets);
     setCurrentBulletIndex(0);
     //bulletes arranging ends
+    setPlayerTurn(true); // Reset to player's turn at the start
+    setIsAllowed(true); // Allow player to start
     console.log('Game started with bullets:', shuffledBullets);
   };
 
@@ -64,16 +64,17 @@ function App() {
       if (currentBullet === 'live') {
         setPlayerHealth((prev) => Math.max(prev - 1, 0));
         setLiveBullet((prev) => prev - 1);
+        setPlayerTurn(false);
       } else {
         setBlankBullet((prev) => prev - 1);
       }
       setTotalBullet((prev) => prev - 1);
       setCurrentBulletIndex((prev) => prev + 1);
-      setPlayerTurn(false);
+      // setPlayerTurn(false);
 
       setTimeout(() => {
         setIsAllowed(true);
-      }, 3000);
+      }, 1000);
     }
   };
 
@@ -89,11 +90,11 @@ function App() {
       }
       setTotalBullet((prev) => prev - 1);
       setCurrentBulletIndex((prev) => prev + 1);
-      setPlayerTurn(true);
+      setPlayerTurn(false);
 
       setTimeout(() => {
         setIsAllowed(true);
-      }, 3000);
+      }, 1000);
     }
   };
 
@@ -107,7 +108,7 @@ function App() {
         onChange={(e) => setPlayerName(e.target.value)}
       />
       <button className='bg-green-700 w-8' onClick={handelStart}>
-        start
+        Start
       </button>
       {playerName && <h1>Welcome {playerName}</h1>}
       {/* health */}
@@ -115,19 +116,22 @@ function App() {
       <div className='flex justify-between'>
         <div className='flex flex-col gap-2 w-15 h-15 m-2 bg-green-500 p-4'>
           <h1>Your Health: {playerHealth}</h1>
-          <div className='flex justify-between gap-5'>
+          <div className="flex justify-between gap-4">
             <button
-              className='cursor-pointer rounded-lg bg-purple-700 p-2'
+              className={`cursor-pointer rounded-lg bg-purple-700 p-2 ${playerTurn && isAllowed ? '' : 'opacity-50'}`}
               onClick={handelSelfShoot}
+              disabled={!playerTurn || !isAllowed}
             >
               Shoot-Self
             </button>
             <button
-              className='cursor-pointer rounded-lg bg-purple-700 p-2'
+              className={`cursor-pointer rounded-lg bg-purple-700 p-2 ${playerTurn && isAllowed ? '' : 'opacity-50'}`}
               onClick={handelDealerShoot}
+              disabled={!playerTurn || !isAllowed}
             >
               Shoot-Dealer
             </button>
+
           </div>
         </div>
 
