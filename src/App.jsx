@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState ,useEffect} from 'react';
 import './App.css';
 
 function App() {
@@ -23,6 +23,61 @@ function App() {
 lunch page ->
 states(health ,live , blank ,isPlaying , total , isAllowed , cigarCount , magnifyCount , isHealable , playerTurn , isGameOver , playerName)
 */
+
+ //Dealer's Move starts
+  useEffect(() => {
+    if (!playerTurn) {
+      dealersMove();
+    }
+  }, [playerTurn]); // Trigger dealersMove when playerTurn changes
+
+  const dealersMove = () => {
+    const randomDecision = Math.random(); // Generate a random value between 0 and 1
+    if (randomDecision < 0.5) {
+      // 50% chance of shooting themselves
+      handelPlayerShoot(); // Dealer shoots you
+      console.log("dealer chose to shoot you")
+    } else {
+      // 50% chance of shooting the player
+      setTimeout(() => handelOwnShoot(), 3000); // Call player's self-shoot function
+      console.log("dealer chose to shoot him")
+    }
+  };
+
+  const handelPlayerShoot = () => {
+    // Dealer shoots themselves
+    if (isPlaying && currentBulletIndex < bullets.length) {
+      const currentBullet = bullets[currentBulletIndex];
+      if (currentBullet === 'live') {
+        setPlayerHealth((prev) => Math.max(prev - 1, 0)); // Player loses health
+        setLiveBullet((prev) => prev - 1);
+      } else {
+        setBlankBullet((prev) => prev - 1);
+      }
+      setTotalBullet((prev) => prev - 1);
+      setCurrentBulletIndex((prev) => prev + 1);
+      setPlayerTurn(true); // Switch turn back to the player
+    }
+  };
+  
+  const handelOwnShoot = () => {
+    // Dealer shoots the player
+    if (isPlaying && currentBulletIndex < bullets.length) {
+      const currentBullet = bullets[currentBulletIndex];
+      if (currentBullet === 'live') {
+        setDealerHealth((prev) => Math.max(prev - 1, 0)); // Dealer loses health
+        setLiveBullet((prev) => prev - 1);
+        setPlayerTurn(true); // Switch turn back to the player
+      } else {
+        setBlankBullet((prev) => prev - 1);
+        setTimeout(() => dealersMove(), 3000);  // hold the turn from the player
+      }
+      setTotalBullet((prev) => prev - 1);
+      setCurrentBulletIndex((prev) => prev + 1);
+    }
+  };
+  
+ //Dealer's Move ends
   const genRandomNumber = () => {
     return Math.floor(Math.random() * 4) + 1;
   };
