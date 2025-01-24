@@ -183,9 +183,24 @@ function App() {
     setPlayerHealth(4);
     setDealerHealth(4);
     setIsGameOver(false);
-    reload();
-    console.log('Game restarted. Welcome Again');
+    setIsPlaying(true);
+    setIsAllowed(true);
+    setPlayerTurn(true);
+    setCurrentBulletIndex(0);
+  
+    // Generate new bullets and reset bullet states
+    const liveCount = genRandomNumber();
+    const blankCount = genRandomNumber();
+    const shuffledBullets = shuffleBullets(liveCount, blankCount);
+  
+    setLiveBullet(liveCount);
+    setBlankBullet(blankCount);
+    setTotalBullet(liveCount + blankCount);
+    setBullets(shuffledBullets);
+  
+    console.log('Game restarted. Welcome Again', shuffledBullets);
   };
+  
 
   return (
     <div className='w-screen h-screen flex flex-col justify-center items-center gap-2 bg-gray-500'>
@@ -233,7 +248,7 @@ function App() {
         <h2>Next Bullet: {bullets[currentBulletIndex] || 'None'}</h2>
       </div>
       {/* Replay Option */}
-      {isGameOver && <button className='bg-blue-700 py-1 px-3 rounded-md' onClick={handelReplay}>Restart</button>}
+      {isGameOver && <button className='bg-blue-700 py-1 px-3 rounded-md' onClick={handelReplay}>Replay</button>}
     </div>
   );
 }
