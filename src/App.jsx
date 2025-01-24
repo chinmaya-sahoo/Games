@@ -1,4 +1,4 @@
-import { useState ,useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
 
 function App() {
@@ -24,12 +24,29 @@ lunch page ->
 states(health ,live , blank ,isPlaying , total , isAllowed , cigarCount , magnifyCount , isHealable , playerTurn , isGameOver , playerName)
 */
 
- //Dealer's Move starts
+  //Dealer's Move starts
   useEffect(() => {
     if (!playerTurn) {
       dealersMove();
     }
   }, [playerTurn]); // Trigger dealersMove when playerTurn changes
+
+  //winner tracker
+  useEffect(() => {
+    if (!isGameOver) {
+      if (playerHealth <= 0) {
+        setIsPlaying(false);
+        setIsGameOver(true);
+        alert("Game Over: Dealer Wins");
+      }
+      else if (dealerHealth <= 0) {
+        setIsPlaying(false);
+        setIsGameOver(true);
+        alert("Game Over: Player Wins");
+      }
+    }
+  }, [playerHealth, dealerHealth, isGameOver]);
+
 
   const dealersMove = () => {
     const randomDecision = Math.random(); // Generate a random value between 0 and 1
@@ -43,7 +60,7 @@ states(health ,live , blank ,isPlaying , total , isAllowed , cigarCount , magnif
       console.log("dealer chose to shoot him")
     }
   };
-
+  //dealer shoot the player
   const handelPlayerShoot = () => {
     // Dealer shoots themselves
     if (isPlaying && currentBulletIndex < bullets.length) {
@@ -59,7 +76,8 @@ states(health ,live , blank ,isPlaying , total , isAllowed , cigarCount , magnif
       setPlayerTurn(true); // Switch turn back to the player
     }
   };
-  
+  //dealer shoot himself
+
   const handelOwnShoot = () => {
     // Dealer shoots the player
     if (isPlaying && currentBulletIndex < bullets.length) {
@@ -76,8 +94,8 @@ states(health ,live , blank ,isPlaying , total , isAllowed , cigarCount , magnif
       setCurrentBulletIndex((prev) => prev + 1);
     }
   };
-  
- //Dealer's Move ends
+
+  //Dealer's Move ends
   const genRandomNumber = () => {
     return Math.floor(Math.random() * 4) + 1;
   };
@@ -94,22 +112,41 @@ states(health ,live , blank ,isPlaying , total , isAllowed , cigarCount , magnif
     }
     return bulletArray;
   };
+  //relad task starts
+  const reload = () => {
+    setTimeout(() => {
+      const liveCount = genRandomNumber();
+      const blankCount = genRandomNumber();
+      const shuffledBullets = shuffleBullets(liveCount, blankCount);
+
+      setLiveBullet(liveCount);
+      setBlankBullet(blankCount);
+      setTotalBullet(liveCount + blankCount);
+      setBullets(shuffledBullets);
+      setCurrentBulletIndex(0);
+
+      console.log('Bullets reloaded:', shuffledBullets);
+      setPlayerTurn(true); 
+    }, 1000); // Delay of 1000ms
+  };
+  //relad task ends
+  //auto trigger reload starts
+  // Trigger reload when bullets are finished
+  useEffect(() => {
+    if (currentBulletIndex >= bullets.length && bullets.length > 0) {
+      console.log('All bullets used. Reloading...');
+      reload();
+    }
+  }, [currentBulletIndex, bullets.length]);
+
+  //auto trigger reload ends
 
   const handelStart = () => {
     setIsPlaying(true);
-    //bulletes arranging starts
-    const liveCount = genRandomNumber();
-    const blankCount = genRandomNumber();
-    const shuffledBullets = shuffleBullets(liveCount, blankCount);
-    setLiveBullet(liveCount);
-    setBlankBullet(blankCount);
-    setTotalBullet(liveCount + blankCount);
-    setBullets(shuffledBullets);
-    setCurrentBulletIndex(0);
-    //bulletes arranging ends
+    reload(); // Call the reload function to handle bullet setup
     setPlayerTurn(true); // Reset to player's turn at the start
     setIsAllowed(true); // Allow player to start
-    console.log('Game started with bullets:', shuffledBullets);
+    console.log('Game started .');
   };
 
   const handelSelfShoot = () => {
@@ -153,6 +190,15 @@ states(health ,live , blank ,isPlaying , total , isAllowed , cigarCount , magnif
     }
   };
 
+  //handel replay starts
+  const handelReplay = () => {
+    setPlayerHealth(4);
+    setDealerHealth(4);
+    setIsGameOver(false);
+    reload();
+    console.log('Game restarted . Welcome Again');
+  };
+  //handel replay ends
   return (
     <div className='w-screen h-screen flex flex-col justify-center items-center gap-2 bg-gray-500'>
       {/* username */}
@@ -162,16 +208,16 @@ states(health ,live , blank ,isPlaying , total , isAllowed , cigarCount , magnif
         className='bg-gray-600 text-white'
         onChange={(e) => setPlayerName(e.target.value)}
       />
-      <button className='bg-green-700 w-8' onClick={handelStart}>
+      <button className='bg-green-700 py-1 px-3 rounded-md' onClick={handelStart}>
         Start
       </button>
       {playerName && <h1>Welcome {playerName}</h1>}
       {/* health */}
       {/* set shooting */}
       <div className='flex justify-between'>
-        <div className='flex flex-col gap-2 w-15 h-15 m-2 bg-green-500 p-4'>
+        <div className='flex flex-col items-center gap-2 w-15 h-15 m-2 bg-green-500 p-4'>
           <h1>Your Health: {playerHealth}</h1>
-          <div className="flex justify-between gap-4">
+          <div className="flex justify-between mt-3 gap-4">
             <button
               className={`cursor-pointer rounded-lg bg-purple-700 p-2 ${playerTurn && isAllowed ? '' : 'opacity-50'}`}
               onClick={handelSelfShoot}
@@ -190,7 +236,7 @@ states(health ,live , blank ,isPlaying , total , isAllowed , cigarCount , magnif
           </div>
         </div>
 
-        <div className='flex flex-col mt-5 gap-2 w-20 h-20 m-2 bg-red-500'>
+        <div className='flex flex-col justify-center mt-5 gap-2 h-20 py-1 px-3 rounded-md bg-red-500'>
           <h1>Dealer's Health: {dealerHealth}</h1>
         </div>
       </div>
@@ -200,6 +246,8 @@ states(health ,live , blank ,isPlaying , total , isAllowed , cigarCount , magnif
         <h1>Remaining Bullets: {bullets.length - currentBulletIndex}</h1>
         <h2>Next Bullet: {bullets[currentBulletIndex] || 'None'}</h2>
       </div>
+      {/* Replay Option */}
+      {isGameOver && <button className='bg-blue-700 py-1 px-3 rounded-md' onClick={handelReplay}>Restart</button>}
     </div>
   );
 }
