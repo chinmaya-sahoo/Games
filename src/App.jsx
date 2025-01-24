@@ -11,7 +11,7 @@ function App() {
   const [blankBullet, setBlankBullet] = useState(4);
   const [totalBullet, setTotalBullet] = useState(8);
   const [bullets, setBullets] = useState([]); // Array to store the bullet sequence
-  const [currentBulletIndex, setCurrentBulletIndex] = useState(0);// Tracks the current bullet being fired
+  const [currentBulletIndex, setCurrentBulletIndex] = useState(0); // Tracks the current bullet being fired
   const [isPlaying, setIsPlaying] = useState(true);
   const [isAllowed, setIsAllowed] = useState(true);
   const [cigarCount, setCigarCount] = useState(0);
@@ -19,27 +19,23 @@ function App() {
   const [isHealable, setIsHealable] = useState(true);
   const [playerTurn, setPlayerTurn] = useState(true);
   const [isGameOver, setIsGameOver] = useState(false);
-  /*
-lunch page ->
-states(health ,live , blank ,isPlaying , total , isAllowed , cigarCount , magnifyCount , isHealable , playerTurn , isGameOver , playerName)
-*/
 
-  //Dealer's Move starts
+  // Dealer's Move starts
   useEffect(() => {
-    if (!playerTurn) {
+    console.log('Player Turn:', playerTurn);
+    if (!playerTurn && currentBulletIndex < bullets.length) {
       dealersMove();
     }
-  }, [playerTurn]); // Trigger dealersMove when playerTurn changes
+  }, [playerTurn, currentBulletIndex]); // Trigger dealersMove when playerTurn changes
 
-  //winner tracker
+  // Winner tracker
   useEffect(() => {
     if (!isGameOver) {
       if (playerHealth <= 0) {
         setIsPlaying(false);
         setIsGameOver(true);
         alert("Game Over: Dealer Wins");
-      }
-      else if (dealerHealth <= 0) {
+      } else if (dealerHealth <= 0) {
         setIsPlaying(false);
         setIsGameOver(true);
         alert("Game Over: Player Wins");
@@ -47,23 +43,23 @@ states(health ,live , blank ,isPlaying , total , isAllowed , cigarCount , magnif
     }
   }, [playerHealth, dealerHealth, isGameOver]);
 
-
   const dealersMove = () => {
-    const randomDecision = Math.random(); // Generate a random value between 0 and 1
-    if (randomDecision < 0.5) {
-      // 50% chance of shooting themselves
-      handelPlayerShoot(); // Dealer shoots you
-      console.log("dealer chose to shoot you")
-    } else {
-      // 50% chance of shooting the player
-      setTimeout(() => handelOwnShoot(), 3000); // Call player's self-shoot function
-      console.log("dealer chose to shoot him")
+    if (dealerHealth > 0) {
+      const randomDecision = Math.random(); // Generate a random value between 0 and 1
+      if (randomDecision < 0.5) {
+        // 50% chance of shooting the player
+        setTimeout(() => handleDealerShootPlayer(), 3000); // Dealer shoots player
+      } else {
+        // 50% chance of shooting themselves
+        setTimeout(() => handleDealerShootSelf(), 3000); // Dealer shoots themselves
+      }
+
     }
   };
-  //dealer shoot the player
-  const handelPlayerShoot = () => {
-    // Dealer shoots themselves
+
+  const handleDealerShootPlayer = () => {
     if (isPlaying && currentBulletIndex < bullets.length) {
+      console.log('Dealer shoots player');
       const currentBullet = bullets[currentBulletIndex];
       if (currentBullet === 'live') {
         setPlayerHealth((prev) => Math.max(prev - 1, 0)); // Player loses health
@@ -71,31 +67,29 @@ states(health ,live , blank ,isPlaying , total , isAllowed , cigarCount , magnif
       } else {
         setBlankBullet((prev) => prev - 1);
       }
+      setPlayerTurn(true); // Player gets the next turn
       setTotalBullet((prev) => prev - 1);
       setCurrentBulletIndex((prev) => prev + 1);
-      setPlayerTurn(true); // Switch turn back to the player
     }
   };
-  //dealer shoot himself
 
-  const handelOwnShoot = () => {
-    // Dealer shoots the player
+  const handleDealerShootSelf = () => {
     if (isPlaying && currentBulletIndex < bullets.length) {
+      console.log('Dealer shoots himself');
       const currentBullet = bullets[currentBulletIndex];
       if (currentBullet === 'live') {
         setDealerHealth((prev) => Math.max(prev - 1, 0)); // Dealer loses health
         setLiveBullet((prev) => prev - 1);
-        setPlayerTurn(true); // Switch turn back to the player
+        setPlayerTurn(true); // Player gets the next turn
       } else {
         setBlankBullet((prev) => prev - 1);
-        setTimeout(() => dealersMove(), 3000);  // hold the turn from the player
+        setPlayerTurn(false); // Dealer gets the next turn
       }
       setTotalBullet((prev) => prev - 1);
       setCurrentBulletIndex((prev) => prev + 1);
     }
   };
 
-  //Dealer's Move ends
   const genRandomNumber = () => {
     return Math.floor(Math.random() * 4) + 1;
   };
@@ -112,7 +106,7 @@ states(health ,live , blank ,isPlaying , total , isAllowed , cigarCount , magnif
     }
     return bulletArray;
   };
-  //relad task starts
+
   const reload = () => {
     setTimeout(() => {
       const liveCount = genRandomNumber();
@@ -126,12 +120,10 @@ states(health ,live , blank ,isPlaying , total , isAllowed , cigarCount , magnif
       setCurrentBulletIndex(0);
 
       console.log('Bullets reloaded:', shuffledBullets);
-      setPlayerTurn(true); 
+      setPlayerTurn(true);
     }, 1000); // Delay of 1000ms
   };
-  //relad task ends
-  //auto trigger reload starts
-  // Trigger reload when bullets are finished
+
   useEffect(() => {
     if (currentBulletIndex >= bullets.length && bullets.length > 0) {
       console.log('All bullets used. Reloading...');
@@ -139,14 +131,12 @@ states(health ,live , blank ,isPlaying , total , isAllowed , cigarCount , magnif
     }
   }, [currentBulletIndex, bullets.length]);
 
-  //auto trigger reload ends
-
   const handelStart = () => {
     setIsPlaying(true);
     reload(); // Call the reload function to handle bullet setup
     setPlayerTurn(true); // Reset to player's turn at the start
     setIsAllowed(true); // Allow player to start
-    console.log('Game started .');
+    console.log('Game started.');
   };
 
   const handelSelfShoot = () => {
@@ -162,7 +152,6 @@ states(health ,live , blank ,isPlaying , total , isAllowed , cigarCount , magnif
       }
       setTotalBullet((prev) => prev - 1);
       setCurrentBulletIndex((prev) => prev + 1);
-      // setPlayerTurn(false);
 
       setTimeout(() => {
         setIsAllowed(true);
@@ -190,15 +179,14 @@ states(health ,live , blank ,isPlaying , total , isAllowed , cigarCount , magnif
     }
   };
 
-  //handel replay starts
   const handelReplay = () => {
     setPlayerHealth(4);
     setDealerHealth(4);
     setIsGameOver(false);
     reload();
-    console.log('Game restarted . Welcome Again');
+    console.log('Game restarted. Welcome Again');
   };
-  //handel replay ends
+
   return (
     <div className='w-screen h-screen flex flex-col justify-center items-center gap-2 bg-gray-500'>
       {/* username */}
@@ -213,7 +201,6 @@ states(health ,live , blank ,isPlaying , total , isAllowed , cigarCount , magnif
       </button>
       {playerName && <h1>Welcome {playerName}</h1>}
       {/* health */}
-      {/* set shooting */}
       <div className='flex justify-between'>
         <div className='flex flex-col items-center gap-2 w-15 h-15 m-2 bg-green-500 p-4'>
           <h1>Your Health: {playerHealth}</h1>
@@ -232,7 +219,6 @@ states(health ,live , blank ,isPlaying , total , isAllowed , cigarCount , magnif
             >
               Shoot-Dealer
             </button>
-
           </div>
         </div>
 
