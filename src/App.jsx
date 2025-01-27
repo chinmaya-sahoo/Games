@@ -19,6 +19,18 @@ function App() {
   const [isHealable, setIsHealable] = useState(true);
   const [playerTurn, setPlayerTurn] = useState(true);
   const [isGameOver, setIsGameOver] = useState(false);
+  const [dealerItem, setDealerItem] = useState({
+    cigar : 0,
+    pill : 0,
+    knife : 0,
+    magnify : 0
+  });
+  const  [playerItem, setPlayerItem] = useState({
+    cigar : 0,
+    pill : 0,
+    knife : 0,
+    magnify : 0
+  });
 
   // Dealer's Move starts
   useEffect(() => {
