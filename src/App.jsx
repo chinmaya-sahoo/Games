@@ -19,17 +19,18 @@ function App() {
   const [isHealable, setIsHealable] = useState(true);
   const [playerTurn, setPlayerTurn] = useState(true);
   const [isGameOver, setIsGameOver] = useState(false);
-  const [dealerItem, setDealerItem] = useState({
-    cigar : 0,
-    pill : 0,
-    knife : 0,
-    magnify : 0
-  });
-  const  [playerItem, setPlayerItem] = useState({
-    cigar : 0,
-    pill : 0,
-    knife : 0,
-    magnify : 0
+  const [doubleDamage, setDoubleDamage] = useState(false); // State for 2X damage
+  // const [dealerItem, setDealerItem] = useState({
+  //   cigar: 0,
+  //   pill: 0,
+  //   knife: 0,
+  //   magnify: 0
+  // });
+  const [playerItem, setPlayerItem] = useState({
+    cigar: 0,
+    pill: 0,
+    knife: 0,
+    magnify: 0
   });
 
   // Dealer's Move starts
@@ -54,7 +55,7 @@ function App() {
       }
     }
   }, [playerHealth, dealerHealth, isGameOver]);
-
+  // dealer's move starts
   const dealersMove = () => {
     if (dealerHealth > 0) {
       const randomDecision = Math.random(); // Generate a random value between 0 and 1
@@ -102,6 +103,7 @@ function App() {
     }
   };
 
+  // dealer's move ends
   const genRandomNumber = () => {
     return Math.floor(Math.random() * 4) + 1;
   };
@@ -110,7 +112,7 @@ function App() {
     const bulletArray = [];
     for (let i = 0; i < liveCount; i++) bulletArray.push('live');
     for (let i = 0; i < blankCount; i++) bulletArray.push('blank');
-
+    
     // Fisher-Yates Shuffle
     for (let i = bulletArray.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -118,77 +120,33 @@ function App() {
     }
     return bulletArray;
   };
-
+  
+  // starts ,Replay and reload section starts 
   const reload = () => {
     setTimeout(() => {
       const liveCount = genRandomNumber();
       const blankCount = genRandomNumber();
       const shuffledBullets = shuffleBullets(liveCount, blankCount);
-
+      
       setLiveBullet(liveCount);
       setBlankBullet(blankCount);
       setTotalBullet(liveCount + blankCount);
       setBullets(shuffledBullets);
       setCurrentBulletIndex(0);
-
+      assignRandomItems(); // Assign random items to player
+      
       console.log('Bullets reloaded:', shuffledBullets);
       setPlayerTurn(true);
+      
     }, 1000); // Delay of 1000ms
   };
-
-  useEffect(() => {
-    if (currentBulletIndex >= bullets.length && bullets.length > 0) {
-      console.log('All bullets used. Reloading...');
-      reload();
-    }
-  }, [currentBulletIndex, bullets.length]);
-
+  
   const handelStart = () => {
     setIsPlaying(true);
     reload(); // Call the reload function to handle bullet setup
     setPlayerTurn(true); // Reset to player's turn at the start
     setIsAllowed(true); // Allow player to start
     console.log('Game started.');
-  };
-
-  const handelSelfShoot = () => {
-    if (isPlaying && isAllowed && currentBulletIndex < bullets.length) {
-      setIsAllowed(false);
-      const currentBullet = bullets[currentBulletIndex];
-      if (currentBullet === 'live') {
-        setPlayerHealth((prev) => Math.max(prev - 1, 0));
-        setLiveBullet((prev) => prev - 1);
-        setPlayerTurn(false);
-      } else {
-        setBlankBullet((prev) => prev - 1);
-      }
-      setTotalBullet((prev) => prev - 1);
-      setCurrentBulletIndex((prev) => prev + 1);
-
-      setTimeout(() => {
-        setIsAllowed(true);
-      }, 1000);
-    }
-  };
-
-  const handelDealerShoot = () => {
-    if (isPlaying && isAllowed && currentBulletIndex < bullets.length) {
-      setIsAllowed(false);
-      const currentBullet = bullets[currentBulletIndex];
-      if (currentBullet === 'live') {
-        setDealerHealth((prev) => Math.max(prev - 1, 0));
-        setLiveBullet((prev) => prev - 1);
-      } else {
-        setBlankBullet((prev) => prev - 1);
-      }
-      setTotalBullet((prev) => prev - 1);
-      setCurrentBulletIndex((prev) => prev + 1);
-      setPlayerTurn(false);
-
-      setTimeout(() => {
-        setIsAllowed(true);
-      }, 1000);
-    }
   };
 
   const handelReplay = () => {
@@ -210,10 +168,126 @@ function App() {
     setTotalBullet(liveCount + blankCount);
     setBullets(shuffledBullets);
   
+    assignRandomItems(); // Assign random items to player
     console.log('Game restarted. Welcome Again', shuffledBullets);
   };
+  // starts and reload section ends 
   
+  useEffect(() => {
+    if (currentBulletIndex >= bullets.length && bullets.length > 0) {
+      console.log('All bullets used. Reloading...');
+      reload();
+    }
+  }, [currentBulletIndex, bullets.length]);
 
+//Player's move section starts
+const handelSelfShoot = () => {
+  if (isPlaying && isAllowed && currentBulletIndex < bullets.length) {
+    setIsAllowed(false);
+    const currentBullet = bullets[currentBulletIndex];
+    if (currentBullet === 'live') {
+      (doubleDamage) ? setPlayerHealth((prev) => Math.max(prev - 2, 0)) : setPlayerHealth((prev) => Math.max(prev - 1, 0))
+      setLiveBullet((prev) => prev - 1);
+      setPlayerTurn(false);
+    } else {
+      setBlankBullet((prev) => prev - 1);
+    }
+    setTotalBullet((prev) => prev - 1);
+    setCurrentBulletIndex((prev) => prev + 1);
+    
+    setTimeout(() => {
+      setIsAllowed(true);
+    }, 1000);
+  }
+};
+
+const handelDealerShoot = () => {
+  if (isPlaying && isAllowed && currentBulletIndex < bullets.length) {
+    setIsAllowed(false);
+    const currentBullet = bullets[currentBulletIndex];
+    if (currentBullet === 'live') {
+      (doubleDamage) ? setDealerHealth((prev) => Math.max(prev - 2, 0)) : setDealerHealth((prev) => Math.max(prev - 1, 0))
+      setLiveBullet((prev) => prev - 1);
+    } else {
+      setBlankBullet((prev) => prev - 1);
+    }
+    setTotalBullet((prev) => prev - 1);
+    setCurrentBulletIndex((prev) => prev + 1);
+    setPlayerTurn(false);
+    
+    setTimeout(() => {
+      setIsAllowed(true);
+    }, 1000);
+  }
+};
+//Player's move section ends
+
+
+  // ItemHandler fuction starts
+  const assignRandomItems = () => {
+    // Define the total number of items to assign
+    const totalItems = 5;
+
+    // Initialize a temporary object to hold the items
+    const tempItems = { cigar: 0, pill: 0, knife: 0, magnify: 0 };
+
+    // Distribute items randomly
+    let remainingItems = totalItems;
+    const itemKeys = Object.keys(tempItems);
+
+    while (remainingItems > 0) {
+      const randomKey = itemKeys[Math.floor(Math.random() * itemKeys.length)];
+      tempItems[randomKey] += 1;
+      remainingItems -= 1;
+    }
+
+    // Update the playerItem state
+    setPlayerItem(tempItems);
+
+    console.log('Random items assigned:', tempItems);
+  };
+
+  useEffect(() => {
+    if (playerHealth < 3) {
+      setIsHealable(false);
+    }
+  }, [playerHealth])
+
+  const useCigar = () => {
+    if (isHealable) {
+      setPlayerHealth((prev) => Math.min(prev + 1, 4)); // Heal by 1 if healable
+      console.log('Cigar used: Player healed by 1');
+    } else {
+      console.log('Cigar used: Player is not healable');
+    }
+    setPlayerItem((prev) => ({ ...prev, cigar: prev.cigar - 1 })); // Deduct cigar
+  };
+
+  const usePill = () => {
+    const chance = Math.random() < 0.5;
+    if (chance) {
+      setPlayerHealth((prev) => Math.min(prev + 2, 4)); // Heal by 2
+      console.log('Pill used: Player healed by 2');
+    } else {
+      setPlayerHealth((prev) => Math.max(prev - 1, 0)); // Reduce 1 health
+      console.log('Pill used: Backfired, reduced player health by 1');
+    }
+    setPlayerItem((prev) => ({ ...prev, pill: prev.pill - 1 })); // Deduct pill
+  };
+
+  const useKnife = () => {
+    console.log('Knife activated: 2× damage for next bullet');
+    setDoubleDamage(true); // Activate double damage
+    setPlayerItem((prev) => ({ ...prev, knife: prev.knife - 1 })); // Deduct knife
+  };
+
+  const useMagnify = () => {
+    const currentBullet = bullets[currentBulletIndex];
+    console.log(`Magnifying Glass used: Next bullet is ${currentBullet}`);
+    setPlayerItem((prev) => ({ ...prev, magnify: prev.magnify - 1 })); // Deduct magnifying glass
+  };
+
+  // ItemHandler fuction ends
   return (
     <div className='w-screen h-screen flex flex-col justify-center items-center gap-2 bg-gray-500'>
       {/* username */}
@@ -247,6 +321,43 @@ function App() {
               Shoot-Dealer
             </button>
           </div>
+          {/* Items section starts */}
+
+          <div className='flex justify-between gap-2 mt-3'>
+            <button
+              className={`cursor-pointer rounded-lg bg-purple-700 p-2 ${playerTurn && isAllowed && playerItem.cigar > 0 ? '' : 'opacity-50'}`}
+              onClick={useCigar}
+              disabled={!playerTurn || !isAllowed || playerItem.cigar <= 0}
+            >
+              Cigar<br />{playerItem.cigar}
+            </button>
+
+            <button
+              className={`cursor-pointer rounded-lg bg-purple-700 p-2 ${playerTurn && isAllowed && playerItem.pill > 0 ? '' : 'opacity-50'}`}
+              onClick={usePill}
+              disabled={!playerTurn || !isAllowed || playerItem.pill <= 0}
+            >
+              Pill<br />{playerItem.pill}
+            </button>
+
+            <button
+              className={`cursor-pointer rounded-lg bg-purple-700 p-2 ${playerTurn && isAllowed && playerItem.knife > 0 ? '' : 'opacity-50'}`}
+              onClick={useKnife}
+              disabled={!playerTurn || !isAllowed || playerItem.knife <= 0}
+            >
+              Knife<br />{playerItem.knife}
+            </button>
+
+            <button
+              className={`cursor-pointer rounded-lg bg-purple-700 p-2 ${playerTurn && isAllowed && playerItem.magnify > 0 ? '' : 'opacity-50'}`}
+              onClick={useMagnify}
+              disabled={!playerTurn || !isAllowed || playerItem.magnify <= 0}
+            >
+              Magnifying Glass<br />{playerItem.magnify}
+            </button>
+          </div>
+
+          {/* Items section ends */}
         </div>
 
         <div className='flex flex-col justify-center mt-5 gap-2 h-20 py-1 px-3 rounded-md bg-red-500'>
