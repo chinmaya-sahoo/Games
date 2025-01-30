@@ -150,15 +150,17 @@ function App() {
   };
 
   const handelReplay = () => {
-    setPlayerHealth(4);
-    setDealerHealth(4);
-    setIsGameOver(false);
     setIsPlaying(true);
+    setIsGameOver(false);
     setIsAllowed(true);
     setPlayerTurn(true);
-    setCurrentBulletIndex(0);
+    setDoubleDamage(false);
+    
+    // Reset Player & Dealer Health
+    setPlayerHealth(4);
+    setDealerHealth(4);
   
-    // Generate new bullets and reset bullet states
+    // Reset Bullets
     const liveCount = genRandomNumber();
     const blankCount = genRandomNumber();
     const shuffledBullets = shuffleBullets(liveCount, blankCount);
@@ -167,10 +169,19 @@ function App() {
     setBlankBullet(blankCount);
     setTotalBullet(liveCount + blankCount);
     setBullets(shuffledBullets);
+    setCurrentBulletIndex(0); // Ensure bullets start from the first shot
   
-    assignRandomItems(); // Assign random items to player
+    // Reset Player Items
+    setPlayerItem({ cigar: 0, pill: 0, knife: 0, magnify: 0 });
+  
+    // Assign new items after bullets are set
+    setTimeout(() => {
+      assignRandomItems();
+    }, 500); // Small delay ensures state update before assignment
+  
     console.log('Game restarted. Welcome Again', shuffledBullets);
   };
+  
   // starts and reload section ends 
   
   useEffect(() => {
