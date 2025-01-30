@@ -33,14 +33,6 @@ function App() {
     magnify: 0
   });
 
-  // Dealer's Move starts
-  useEffect(() => {
-    console.log('Player Turn:', playerTurn);
-    if (!playerTurn && currentBulletIndex < bullets.length) {
-      dealersMove();
-    }
-  }, [playerTurn, currentBulletIndex]); // Trigger dealersMove when playerTurn changes
-
   // Winner tracker
   useEffect(() => {
     if (!isGameOver) {
@@ -55,7 +47,15 @@ function App() {
       }
     }
   }, [playerHealth, dealerHealth, isGameOver]);
-  // dealer's move starts
+  // Dealer's Move starts
+  useEffect(() => {
+    console.log('Player Turn:', playerTurn);
+    if (!playerTurn && currentBulletIndex < bullets.length) {
+      dealersMove();
+    }
+  }, [playerTurn, currentBulletIndex]); // Trigger dealersMove when playerTurn changes
+
+  // dealer's move predictor
   const dealersMove = () => {
     if (dealerHealth > 0) {
       const randomDecision = Math.random(); // Generate a random value between 0 and 1
@@ -188,6 +188,7 @@ const handelSelfShoot = () => {
     if (currentBullet === 'live') {
       (doubleDamage) ? setPlayerHealth((prev) => Math.max(prev - 2, 0)) : setPlayerHealth((prev) => Math.max(prev - 1, 0))
       setLiveBullet((prev) => prev - 1);
+      setDoubleDamage(false); // Reset double damage
       setPlayerTurn(false);
     } else {
       setBlankBullet((prev) => prev - 1);
@@ -208,6 +209,7 @@ const handelDealerShoot = () => {
     if (currentBullet === 'live') {
       (doubleDamage) ? setDealerHealth((prev) => Math.max(prev - 2, 0)) : setDealerHealth((prev) => Math.max(prev - 1, 0))
       setLiveBullet((prev) => prev - 1);
+      setDoubleDamage(false); // Reset double damage
     } else {
       setBlankBullet((prev) => prev - 1);
     }
