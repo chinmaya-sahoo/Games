@@ -1,0 +1,42 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+.bg{
+    background-image: url('bg.png');
+    background-size: cover;  /* or use background-size: 100% 100%; */
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.player{
+    position: absolute;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.d-health{
+    position: absolute;
+    top: 30px;
+    right: 20px;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.p-health{
+    position: absolute;
+    bottom: 30px;
+    left: 20px;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+}
+.bullet{
+    position: absolute;
+    /* height: 40px; */
+    font-size: larger;
+    bottom: 25%;
+    left: 50%;
+    transform: translateX(-50%);
+}

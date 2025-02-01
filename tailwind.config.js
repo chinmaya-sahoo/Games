@@ -5,7 +5,11 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        blood: ["Creepster", "Nosifer", "sans-serif"],
+      },
+    },
   },
   plugins: [],
 }

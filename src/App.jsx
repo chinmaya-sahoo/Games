@@ -12,7 +12,7 @@ function App() {
   const [totalBullet, setTotalBullet] = useState(8);
   const [bullets, setBullets] = useState([]); // Array to store the bullet sequence
   const [currentBulletIndex, setCurrentBulletIndex] = useState(0); // Tracks the current bullet being fired
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [isAllowed, setIsAllowed] = useState(true);
   const [cigarCount, setCigarCount] = useState(0);
   const [magnifyCount, setMagnifyCount] = useState(0);
@@ -302,90 +302,103 @@ function App() {
 
   // ItemHandler fuction ends
   return (
-    <div className='w-screen h-screen flex flex-col justify-center items-center gap-2 bg-gray-500'>
+    <div className={`w-screen h-screen flex flex-col justify-center items-center bg gap-2 p-6 bg-gray-500`}>
       {/* username */}
-      <input
+      {!isPlaying &&
+       <input
         type='text'
         placeholder='Your Name'
         className='bg-gray-600 text-white'
         onChange={(e) => setPlayerName(e.target.value)}
-      />
+      />}
+      {!isPlaying && 
       <button className='bg-green-700 py-1 px-3 rounded-md' onClick={handelStart}>
         Start
-      </button>
-      {playerName && <h1>Welcome {playerName}</h1>}
-      {/* health */}
-      <div className='flex justify-between'>
-        <div className='flex flex-col items-center gap-2 w-15 h-15 m-2 bg-green-500 p-4'>
-          <h1>Your Health: {playerHealth}</h1>
-          <div className="flex justify-between mt-3 gap-4">
-            <button
-              className={`cursor-pointer rounded-lg bg-purple-700 p-2 ${playerTurn && isAllowed ? '' : 'opacity-50'}`}
-              onClick={handelSelfShoot}
-              disabled={!playerTurn || !isAllowed}
-            >
-              Shoot-Self
-            </button>
-            <button
-              className={`cursor-pointer rounded-lg bg-purple-700 p-2 ${playerTurn && isAllowed ? '' : 'opacity-50'}`}
-              onClick={handelDealerShoot}
-              disabled={!playerTurn || !isAllowed}
-            >
-              Shoot-Dealer
-            </button>
+      </button>}
+
+      {/* game status */}
+      {isPlaying &&
+        <div>
+          {playerName &&
+            <h1 className="bg-black text-center font-semibold text-2xl player text-red-600 tracking-widest rounded-sm uppercase font-blood inline-block p-4 border-4 border-red-700 opacity-60">
+              {playerName}  V/S Dealer
+            </h1>
+          }
+          {/* health */}
+          <div className='flex justify-between'>
+            <div className='flex flex-col items-center gap-2 m-2 p-health bg-green-500 p-4'>
+              <h1>Your Health: {playerHealth}</h1>
+              <div className="flex justify-between mt-3 gap-4">
+                <button
+                  className={`cursor-pointer rounded-lg bg-purple-700 p-2 ${playerTurn && isAllowed ? '' : 'opacity-50'}`}
+                  onClick={handelSelfShoot}
+                  disabled={!playerTurn || !isAllowed}
+                >
+                  Shoot-Self
+                </button>
+                <button
+                  className={`cursor-pointer rounded-lg bg-purple-700 p-2 ${playerTurn && isAllowed ? '' : 'opacity-50'}`}
+                  onClick={handelDealerShoot}
+                  disabled={!playerTurn || !isAllowed}
+                >
+                  Shoot-Dealer
+                </button>
+              </div>
+              {/* Items section starts */}
+
+              <div className='flex justify-between gap-2 mt-3'>
+                <button
+                  className={`cursor-pointer rounded-lg bg-purple-700 p-2 ${playerTurn && isAllowed && playerItem.cigar > 0 ? '' : 'opacity-50'}`}
+                  onClick={useCigar}
+                  disabled={!playerTurn || !isAllowed || playerItem.cigar <= 0}
+                >
+                  Cigar<br />{playerItem.cigar}
+                </button>
+
+                <button
+                  className={`cursor-pointer rounded-lg bg-purple-700 p-2 ${playerTurn && isAllowed && playerItem.pill > 0 ? '' : 'opacity-50'}`}
+                  onClick={usePill}
+                  disabled={!playerTurn || !isAllowed || playerItem.pill <= 0}
+                >
+                  Pill<br />{playerItem.pill}
+                </button>
+
+                <button
+                  className={`cursor-pointer rounded-lg bg-purple-700 p-2 ${playerTurn && isAllowed && playerItem.knife > 0 ? '' : 'opacity-50'}`}
+                  onClick={useKnife}
+                  disabled={!playerTurn || !isAllowed || playerItem.knife <= 0}
+                >
+                  Knife<br />{playerItem.knife}
+                </button>
+
+                <button
+                  className={`cursor-pointer rounded-lg bg-purple-700 p-2 ${playerTurn && isAllowed && playerItem.magnify > 0 ? '' : 'opacity-50'}`}
+                  onClick={useMagnify}
+                  disabled={!playerTurn || !isAllowed || playerItem.magnify <= 0}
+                >
+                  Magnifying Glass<br />{playerItem.magnify}
+                </button>
+              </div>
+
+              {/* Items section ends */}
+            </div>
+
+            <div className='flex flex-col justify-center mt-5 gap-2 h-20 py-1 px-3 rounded-md bg-red-500 d-health'>
+              <h1>Dealer's Health: {dealerHealth}</h1>
+            </div>
           </div>
-          {/* Items section starts */}
 
-          <div className='flex justify-between gap-2 mt-3'>
-            <button
-              className={`cursor-pointer rounded-lg bg-purple-700 p-2 ${playerTurn && isAllowed && playerItem.cigar > 0 ? '' : 'opacity-50'}`}
-              onClick={useCigar}
-              disabled={!playerTurn || !isAllowed || playerItem.cigar <= 0}
-            >
-              Cigar<br />{playerItem.cigar}
-            </button>
-
-            <button
-              className={`cursor-pointer rounded-lg bg-purple-700 p-2 ${playerTurn && isAllowed && playerItem.pill > 0 ? '' : 'opacity-50'}`}
-              onClick={usePill}
-              disabled={!playerTurn || !isAllowed || playerItem.pill <= 0}
-            >
-              Pill<br />{playerItem.pill}
-            </button>
-
-            <button
-              className={`cursor-pointer rounded-lg bg-purple-700 p-2 ${playerTurn && isAllowed && playerItem.knife > 0 ? '' : 'opacity-50'}`}
-              onClick={useKnife}
-              disabled={!playerTurn || !isAllowed || playerItem.knife <= 0}
-            >
-              Knife<br />{playerItem.knife}
-            </button>
-
-            <button
-              className={`cursor-pointer rounded-lg bg-purple-700 p-2 ${playerTurn && isAllowed && playerItem.magnify > 0 ? '' : 'opacity-50'}`}
-              onClick={useMagnify}
-              disabled={!playerTurn || !isAllowed || playerItem.magnify <= 0}
-            >
-              Magnifying Glass<br />{playerItem.magnify}
-            </button>
+          {/* Bullets Info */}
+          <div className='mt-4 bg-blue-800 bullet'>
+            <h1>Remaining Bullets: {bullets.length - currentBulletIndex}</h1>
+            <h2>Next Bullet: {bullets[currentBulletIndex] || 'None'}</h2>
           </div>
+        </div>}
 
-          {/* Items section ends */}
-        </div>
-
-        <div className='flex flex-col justify-center mt-5 gap-2 h-20 py-1 px-3 rounded-md bg-red-500'>
-          <h1>Dealer's Health: {dealerHealth}</h1>
-        </div>
-      </div>
-
-      {/* Bullets Info */}
-      <div className='mt-4'>
-        <h1>Remaining Bullets: {bullets.length - currentBulletIndex}</h1>
-        <h2>Next Bullet: {bullets[currentBulletIndex] || 'None'}</h2>
-      </div>
       {/* Replay Option */}
       {isGameOver && <button className='bg-blue-700 py-1 px-3 rounded-md' onClick={handelReplay}>Replay</button>}
     </div>
+
   );
 }
 
