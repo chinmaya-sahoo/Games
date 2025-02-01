@@ -320,9 +320,12 @@ function App() {
       {isPlaying &&
         <div>
           {playerName &&
-            <h1 className="bg-black text-center font-semibold text-2xl player text-red-600 tracking-widest rounded-sm uppercase font-blood inline-block p-4 border-4 border-red-700 opacity-60">
-              {playerName}  V/S Dealer
-            </h1>
+            <h1
+            className="bg-black text-center font-semibold text-sm sm:text-base md:text-lg lg:text-xl text-red-600 tracking-widest rounded-sm uppercase font-blood inline-block p-1 sm:p-2 md:p-3 border-4 border-red-700 opacity-60 player"
+          >
+            {playerName} V/S Dealer
+          </h1>
+          
           }
           {/* health */}
           <div className='flex justify-between'>

@@ -21,8 +21,8 @@
     left: 50%;
     transform: translate(-50%,-50%);
 }
-
-.d-health{
+/* Default Styles */
+.d-health {
     position: absolute;
     top: 30px;
     right: 20px;
@@ -31,7 +31,7 @@
     font-weight: bold;
 }
 
-.p-health{
+.p-health {
     position: absolute;
     bottom: 30px;
     left: 20px;
@@ -39,13 +39,71 @@
     font-size: 20px;
     font-weight: bold;
 }
-.bullet{
+
+.bullet {
     position: absolute;
-    /* height: 40px; */
     font-size: larger;
-    bottom: 17%;
+    bottom: 18%;
     left: 50%;
-    transform: translate(-50%,-50%);
+    transform: translate(-50%, -50%);
     background: #000;
     color: white;
+}
+
+/* Responsive Styles */
+@media (max-width: 1024px) {
+    .d-health, .p-health, .bullet {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 768px) {
+    .d-health {
+        top: 20px;
+        right: 10px;
+        font-size: 16px;
+    }
+    .p-health {
+        bottom: 20px;
+        left: 10px;
+        font-size: 16px;
+    }
+    .bullet {
+        font-size: 16px;
+        bottom: 20%;
+    }
+}
+
+@media (max-width: 480px) {
+    .d-health {
+        top: 10px;
+        right: 5px;
+        font-size: 14px;
+    }
+    .p-health {
+        bottom: 10px;
+        left: 5px;
+        font-size: 14px;
+    }
+    .bullet {
+        font-size: 14px;
+        bottom: 20%;
+    }
+}
+
+@media (max-width: 350px) {
+    .d-health {
+        top: 5px;
+        right: 2px;
+        font-size: 12px;
+    }
+    .p-health {
+        bottom: 5px;
+        left: 2px;
+        font-size: 12px;
+    }
+    .bullet {
+        font-size: 12px;
+        bottom: 20%;
+    }
 }
