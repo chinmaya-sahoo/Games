@@ -385,9 +385,6 @@ function App() {
 
             <div className='flex flex-col justify-center mt-5 gap-2 h-20 py-1 px-3 rounded-md bg-red-500 d-health'>
               <h1>Dealer's Health: {dealerHealth}</h1>
-              <div className='flex justify-center p-4 dealer'>
-                <img className='w-[120px]' src="/dealer.png" alt="" />
-              </div>
             </div>
           </div>
 
@@ -396,10 +393,18 @@ function App() {
             <h1>Remaining Bullets: {bullets.length - currentBulletIndex}</h1>
             <h2>Next Bullet: {bullets[currentBulletIndex] || 'None'}</h2>
           </div>
+          <div className='dealer'>
+            <img className='w-[120px]' src="/dealer.png" alt="" />
+          </div>
         </div>}
 
       {/* Replay Option */}
-      {isGameOver && <button className='bg-blue-700 py-1 px-3 rounded-md' onClick={handelReplay}>Replay</button>}
+      {isGameOver &&
+        <button className='bg-blue-700 py-1 px-3 rounded-md' onClick={handelReplay}>
+          Replay
+        </button>
+      }
+      {/* dealer image  */}
     </div>
 
   );

@@ -17,9 +17,9 @@
 
 .dealer{
     position: absolute;
-    top: 50%;
+    top: 42%;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate(-50%,-50%);
 }
 
 .d-health{
@@ -43,9 +43,9 @@
     position: absolute;
     /* height: 40px; */
     font-size: larger;
-    bottom: 25%;
+    bottom: 17%;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate(-50%,-50%);
     background: #000;
     color: white;
 }
