@@ -305,16 +305,16 @@ function App() {
     <div className={`w-screen h-screen flex flex-col justify-center items-center bg gap-2 p-6 bg-gray-500`}>
       {/* username */}
       {!isPlaying &&
-       <input
-        type='text'
-        placeholder='Your Name'
-        className='bg-gray-600 text-white'
-        onChange={(e) => setPlayerName(e.target.value)}
-      />}
-      {!isPlaying && 
-      <button className='bg-green-700 py-1 px-3 rounded-md' onClick={handelStart}>
-        Start
-      </button>}
+        <input
+          type='text'
+          placeholder='Your Name'
+          className='bg-gray-600 text-white'
+          onChange={(e) => setPlayerName(e.target.value)}
+        />}
+      {!isPlaying &&
+        <button className='bg-green-700 py-1 px-3 rounded-md' onClick={handelStart}>
+          Start
+        </button>}
 
       {/* game status */}
       {isPlaying &&
@@ -385,11 +385,14 @@ function App() {
 
             <div className='flex flex-col justify-center mt-5 gap-2 h-20 py-1 px-3 rounded-md bg-red-500 d-health'>
               <h1>Dealer's Health: {dealerHealth}</h1>
+              <div className='flex justify-center p-4 dealer'>
+                <img className='w-[120px]' src="/dealer.png" alt="" />
+              </div>
             </div>
           </div>
 
           {/* Bullets Info */}
-          <div className='mt-4 bg-blue-800 bullet'>
+          <div className='mt-4 py-2 px-6 rounded-sm bg-blue-800 bullet'>
             <h1>Remaining Bullets: {bullets.length - currentBulletIndex}</h1>
             <h2>Next Bullet: {bullets[currentBulletIndex] || 'None'}</h2>
           </div>
