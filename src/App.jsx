@@ -112,7 +112,7 @@ function App() {
     const bulletArray = [];
     for (let i = 0; i < liveCount; i++) bulletArray.push('live');
     for (let i = 0; i < blankCount; i++) bulletArray.push('blank');
-    
+
     // Fisher-Yates Shuffle
     for (let i = bulletArray.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -120,27 +120,27 @@ function App() {
     }
     return bulletArray;
   };
-  
+
   // starts ,Replay and reload section starts 
   const reload = () => {
     setTimeout(() => {
       const liveCount = genRandomNumber();
       const blankCount = genRandomNumber();
       const shuffledBullets = shuffleBullets(liveCount, blankCount);
-      
+
       setLiveBullet(liveCount);
       setBlankBullet(blankCount);
       setTotalBullet(liveCount + blankCount);
       setBullets(shuffledBullets);
       setCurrentBulletIndex(0);
       assignRandomItems(); // Assign random items to player
-      
+
       console.log('Bullets reloaded:', shuffledBullets);
       setPlayerTurn(true);
-      
+
     }, 1000); // Delay of 1000ms
   };
-  
+
   const handelStart = () => {
     setIsPlaying(true);
     reload(); // Call the reload function to handle bullet setup
@@ -155,35 +155,35 @@ function App() {
     setIsAllowed(true);
     setPlayerTurn(true);
     setDoubleDamage(false);
-    
+
     // Reset Player & Dealer Health
     setPlayerHealth(4);
     setDealerHealth(4);
-  
+
     // Reset Bullets
     const liveCount = genRandomNumber();
     const blankCount = genRandomNumber();
     const shuffledBullets = shuffleBullets(liveCount, blankCount);
-  
+
     setLiveBullet(liveCount);
     setBlankBullet(blankCount);
     setTotalBullet(liveCount + blankCount);
     setBullets(shuffledBullets);
     setCurrentBulletIndex(0); // Ensure bullets start from the first shot
-  
+
     // Reset Player Items
     setPlayerItem({ cigar: 0, pill: 0, knife: 0, magnify: 0 });
-  
+
     // Assign new items after bullets are set
     setTimeout(() => {
       assignRandomItems();
     }, 500); // Small delay ensures state update before assignment
-  
+
     console.log('Game restarted. Welcome Again', shuffledBullets);
   };
-  
+
   // starts and reload section ends 
-  
+
   useEffect(() => {
     if (currentBulletIndex >= bullets.length && bullets.length > 0) {
       console.log('All bullets used. Reloading...');
@@ -191,49 +191,49 @@ function App() {
     }
   }, [currentBulletIndex, bullets.length]);
 
-//Player's move section starts
-const handelSelfShoot = () => {
-  if (isPlaying && isAllowed && currentBulletIndex < bullets.length) {
-    setIsAllowed(false);
-    const currentBullet = bullets[currentBulletIndex];
-    if (currentBullet === 'live') {
-      (doubleDamage) ? setPlayerHealth((prev) => Math.max(prev - 2, 0)) : setPlayerHealth((prev) => Math.max(prev - 1, 0))
-      setLiveBullet((prev) => prev - 1);
-      setDoubleDamage(false); // Reset double damage
-      setPlayerTurn(false);
-    } else {
-      setBlankBullet((prev) => prev - 1);
-    }
-    setTotalBullet((prev) => prev - 1);
-    setCurrentBulletIndex((prev) => prev + 1);
-    
-    setTimeout(() => {
-      setIsAllowed(true);
-    }, 1000);
-  }
-};
+  //Player's move section starts
+  const handelSelfShoot = () => {
+    if (isPlaying && isAllowed && currentBulletIndex < bullets.length) {
+      setIsAllowed(false);
+      const currentBullet = bullets[currentBulletIndex];
+      if (currentBullet === 'live') {
+        (doubleDamage) ? setPlayerHealth((prev) => Math.max(prev - 2, 0)) : setPlayerHealth((prev) => Math.max(prev - 1, 0))
+        setLiveBullet((prev) => prev - 1);
+        setDoubleDamage(false); // Reset double damage
+        setPlayerTurn(false);
+      } else {
+        setBlankBullet((prev) => prev - 1);
+      }
+      setTotalBullet((prev) => prev - 1);
+      setCurrentBulletIndex((prev) => prev + 1);
 
-const handelDealerShoot = () => {
-  if (isPlaying && isAllowed && currentBulletIndex < bullets.length) {
-    setIsAllowed(false);
-    const currentBullet = bullets[currentBulletIndex];
-    if (currentBullet === 'live') {
-      (doubleDamage) ? setDealerHealth((prev) => Math.max(prev - 2, 0)) : setDealerHealth((prev) => Math.max(prev - 1, 0))
-      setLiveBullet((prev) => prev - 1);
-      setDoubleDamage(false); // Reset double damage
-    } else {
-      setBlankBullet((prev) => prev - 1);
+      setTimeout(() => {
+        setIsAllowed(true);
+      }, 1000);
     }
-    setTotalBullet((prev) => prev - 1);
-    setCurrentBulletIndex((prev) => prev + 1);
-    setPlayerTurn(false);
-    
-    setTimeout(() => {
-      setIsAllowed(true);
-    }, 1000);
-  }
-};
-//Player's move section ends
+  };
+
+  const handelDealerShoot = () => {
+    if (isPlaying && isAllowed && currentBulletIndex < bullets.length) {
+      setIsAllowed(false);
+      const currentBullet = bullets[currentBulletIndex];
+      if (currentBullet === 'live') {
+        (doubleDamage) ? setDealerHealth((prev) => Math.max(prev - 2, 0)) : setDealerHealth((prev) => Math.max(prev - 1, 0))
+        setLiveBullet((prev) => prev - 1);
+        setDoubleDamage(false); // Reset double damage
+      } else {
+        setBlankBullet((prev) => prev - 1);
+      }
+      setTotalBullet((prev) => prev - 1);
+      setCurrentBulletIndex((prev) => prev + 1);
+      setPlayerTurn(false);
+
+      setTimeout(() => {
+        setIsAllowed(true);
+      }, 1000);
+    }
+  };
+  //Player's move section ends
 
 
   // ItemHandler fuction starts
