@@ -20,6 +20,7 @@ function App() {
   const [cigarCount, setCigarCount] = useState(0);
   const [magnifyCount, setMagnifyCount] = useState(0);
   const [isHealable, setIsHealable] = useState(true);
+  const [messageShown, setMessageShown] = useState(false);//message regarding healable or not
   const [playerTurn, setPlayerTurn] = useState(true);
   const [isGameOver, setIsGameOver] = useState(false);
   const [isNewGame, setIsNewGame] = useState(true)
@@ -292,11 +293,12 @@ function App() {
   };
 
   useEffect(() => {
-    if (playerHealth < 3) {
+    if (playerHealth < 3 && !messageShown) {
       setIsHealable(false);
-      addInfoMessage(`from now on you can't heal with cigar `);
+      addInfoMessage(`From now on, you can't heal with a cigar.`);
+      setMessageShown(true); // Prevents further executions
     }
-  }, [playerHealth])
+  }, [playerHealth, messageShown]);
 
   const useCigar = () => {
     if (isHealable) {
@@ -310,8 +312,8 @@ function App() {
     setPlayerItem((prev) => ({ ...prev, cigar: prev.cigar - 1 })); // Deduct cigar
   };
 
-  const usePill = () => {
-    const chance = Math.random() < 0.5;
+  const usePill = () => {// 40% chance of healing
+    const chance = Math.random() < 0.4;
     if (chance) {
       setPlayerHealth((prev) => Math.min(prev + 2, 4)); // Heal by 2
       console.log('Pill used: Player healed by 2');
