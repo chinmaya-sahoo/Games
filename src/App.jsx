@@ -3,6 +3,7 @@ import './App.css';
 import MusicPlayer from './components/MusicPlayer';
 
 function App() {
+  const [infoMessages, setInfoMessages] = useState([]);
   const [playerName, setPlayerName] = useState('player');
   const [playerHealth, setPlayerHealth] = useState(4);
   const [dealerHealth, setDealerHealth] = useState(4);
@@ -35,6 +36,15 @@ function App() {
     magnify: 0
   });
 
+  //information box starts
+  const addInfoMessage = (message) => {
+    setInfoMessages((prevMessages) => [...prevMessages.slice(-4), message]); // Keep last 5 messages
+  };
+  useEffect(() => {
+    addInfoMessage('Welcome! Press Start to begin.');
+  }, []);
+  //information box ends
+
   // Winner tracker
   useEffect(() => {
     if (!isGameOver) {
@@ -42,10 +52,12 @@ function App() {
         setIsPlaying(false);
         setIsGameOver(true);
         alert("Game Over: Dealer Wins");
+        addInfoMessage('Game Over: Dealer Wins');
       } else if (dealerHealth <= 0) {
         setIsPlaying(false);
         setIsGameOver(true);
         alert("Game Over: Player Wins");
+        addInfoMessage(`Game Over: ${playerName} Wins`);
       }
     }
   }, [playerHealth, dealerHealth, isGameOver]);
@@ -74,13 +86,15 @@ function App() {
 
   const handleDealerShootPlayer = () => {
     if (isPlaying && currentBulletIndex < bullets.length) {
-      console.log('Dealer shoots player');
+      // console.log('Dealer shoots player');
       const currentBullet = bullets[currentBulletIndex];
       if (currentBullet === 'live') {
         setPlayerHealth((prev) => Math.max(prev - 1, 0)); // Player loses health
         setLiveBullet((prev) => prev - 1);
+        addInfoMessage('Dealer shoots you with a live bullet');
       } else {
         setBlankBullet((prev) => prev - 1);
+        addInfoMessage('Dealer shoots you with a blank bullet');
       }
       setPlayerTurn(true); // Player gets the next turn
       setTotalBullet((prev) => prev - 1);
@@ -90,15 +104,17 @@ function App() {
 
   const handleDealerShootSelf = () => {
     if (isPlaying && currentBulletIndex < bullets.length) {
-      console.log('Dealer shoots himself');
+      // console.log('Dealer shoots himself');
       const currentBullet = bullets[currentBulletIndex];
       if (currentBullet === 'live') {
         setDealerHealth((prev) => Math.max(prev - 1, 0)); // Dealer loses health
         setLiveBullet((prev) => prev - 1);
         setPlayerTurn(true); // Player gets the next turn
+        addInfoMessage('Dealer shoots himself with a live bullet');
       } else {
         setBlankBullet((prev) => prev - 1);
         setPlayerTurn(false); // Dealer gets the next turn
+        addInfoMessage('Dealer shoots himself with a blank bullet');
       }
       setTotalBullet((prev) => prev - 1);
       setCurrentBulletIndex((prev) => prev + 1);
@@ -138,6 +154,7 @@ function App() {
       assignRandomItems(); // Assign random items to player
 
       console.log('Bullets reloaded:', shuffledBullets);
+      addInfoMessage(`Bullets reloaded. ${liveCount} live bullets and ${blankCount} blank bullets.`);
       setPlayerTurn(true);
 
     }, 1000); // Delay of 1000ms
@@ -149,7 +166,9 @@ function App() {
     reload(); // Call the reload function to handle bullet setup
     setPlayerTurn(true); // Reset to player's turn at the start
     setIsAllowed(true); // Allow player to start
-    console.log('Game started.');
+    // console.log('Game started.');
+    setInfoMessages([]); // Clear messages on replay
+    addInfoMessage('Game Started!');
   };
 
   const handelReplay = () => {
@@ -183,6 +202,8 @@ function App() {
     }, 500); // Small delay ensures state update before assignment
 
     console.log('Game restarted. Welcome Again', shuffledBullets);
+    addInfoMessage(`Game Restarted. Welcome Again!`);
+    addInfoMessage(`Bullets reloaded. ${liveCount} live bullets and ${blankCount} blank bullets.`);
   };
 
   // starts and reload section ends 
@@ -190,6 +211,7 @@ function App() {
   useEffect(() => {
     if (currentBulletIndex >= bullets.length && bullets.length > 0) {
       console.log('All bullets used. Reloading...');
+      addInfoMessage('All bullets used. Reloading...');
       reload();
     }
   }, [currentBulletIndex, bullets.length]);
@@ -204,8 +226,10 @@ function App() {
         setLiveBullet((prev) => prev - 1);
         setDoubleDamage(false); // Reset double damage
         setPlayerTurn(false);
+        addInfoMessage('You shoot yourself with a live bullet');
       } else {
         setBlankBullet((prev) => prev - 1);
+        addInfoMessage('You shoot yourself with a blank bullet');
       }
       setTotalBullet((prev) => prev - 1);
       setCurrentBulletIndex((prev) => prev + 1);
@@ -224,8 +248,10 @@ function App() {
         (doubleDamage) ? setDealerHealth((prev) => Math.max(prev - 2, 0)) : setDealerHealth((prev) => Math.max(prev - 1, 0))
         setLiveBullet((prev) => prev - 1);
         setDoubleDamage(false); // Reset double damage
+        addInfoMessage('you shoot dealer with a live bullet')
       } else {
         setBlankBullet((prev) => prev - 1);
+        addInfoMessage('you shoot dealer with a blank bullet')
       }
       setTotalBullet((prev) => prev - 1);
       setCurrentBulletIndex((prev) => prev + 1);
@@ -261,11 +287,13 @@ function App() {
     setPlayerItem(tempItems);
 
     console.log('Random items assigned:', tempItems);
+    addInfoMessage(`Random items assigned to you .`);
   };
 
   useEffect(() => {
     if (playerHealth < 3) {
       setIsHealable(false);
+      addInfoMessage(`from now on you can't heal with cigar `);
     }
   }, [playerHealth])
 
@@ -273,8 +301,10 @@ function App() {
     if (isHealable) {
       setPlayerHealth((prev) => Math.min(prev + 1, 4)); // Heal by 1 if healable
       console.log('Cigar used: Player healed by 1');
+      addInfoMessage('Cigar used: your healed by 1');
     } else {
       console.log('Cigar used: Player is not healable');
+      addInfoMessage('Cigar used: but you can\'t heal now.');
     }
     setPlayerItem((prev) => ({ ...prev, cigar: prev.cigar - 1 })); // Deduct cigar
   };
@@ -284,15 +314,18 @@ function App() {
     if (chance) {
       setPlayerHealth((prev) => Math.min(prev + 2, 4)); // Heal by 2
       console.log('Pill used: Player healed by 2');
+      addInfoMessage('Pill used: your healed by 2');
     } else {
       setPlayerHealth((prev) => Math.max(prev - 1, 0)); // Reduce 1 health
       console.log('Pill used: Backfired, reduced player health by 1');
+      addInfoMessage('Pill used: backfired, reduced player health by 1');
     }
     setPlayerItem((prev) => ({ ...prev, pill: prev.pill - 1 })); // Deduct pill
   };
 
   const useKnife = () => {
     console.log('Knife activated: 2× damage for next bullet');
+    addInfoMessage('Knife activated: 2× damage for next bullet');
     setDoubleDamage(true); // Activate double damage
     setPlayerItem((prev) => ({ ...prev, knife: prev.knife - 1 })); // Deduct knife
   };
@@ -300,6 +333,7 @@ function App() {
   const useMagnify = () => {
     const currentBullet = bullets[currentBulletIndex];
     console.log(`Magnifying Glass used: Next bullet is ${currentBullet}`);
+    addInfoMessage(`Magnifying Glass used: Next bullet is ${currentBullet}`);
     setPlayerItem((prev) => ({ ...prev, magnify: prev.magnify - 1 })); // Deduct magnifying glass
   };
 
@@ -395,10 +429,10 @@ function App() {
           </div>
 
           {/* Bullets Info */}
-          <div className='mt-4 py-2 px-6 rounded-sm bg-blue-800 bullet'>
+          {/* <div className='mt-4 py-2 px-6 rounded-sm bg-blue-800 bullet'>
             <h1>Remaining Bullets: {bullets.length - currentBulletIndex}</h1>
             <h2>Next Bullet: {bullets[currentBulletIndex] || 'None'}</h2>
-          </div>
+          </div> */}
           {/* dealer image  */}
           <div className='dealer'>
             <img className='w-[120px]' src="/dealer.png" alt="" />
@@ -413,6 +447,24 @@ function App() {
       }
       {/* bgm  */}
       <MusicPlayer song={'/02. Surrounded.mp3'} />
+
+      {/* info Box  */}
+      <div className="fixed right-4 top-[60%] -translate-y-1/2 
+  w-48 sm:w-56 md:w-64 
+  bg-gray-800 p-2 sm:p-3 md:p-4 rounded-lg shadow-lg border border-gray-700">
+
+        <h3 className="text-sm sm:text-base md:text-lg font-bold text-gray-300 border-b pb-1 sm:pb-2 mb-1 sm:mb-2">
+          Game Updates
+        </h3>
+
+        <div className="space-y-1 max-h-40 sm:max-h-48 overflow-y-auto">
+          {infoMessages.map((msg, index) => (
+            <div key={index} className="p-1 sm:p-2 bg-gray-700 rounded-lg fade-in text-xs sm:text-sm">
+              {msg}
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
 
   );
