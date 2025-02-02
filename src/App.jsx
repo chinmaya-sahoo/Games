@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import './App.css';
-import AutoPlaySong from './components/AutoPlaySong';
+import MusicPlayer from './components/MusicPlayer';
 
 function App() {
   const [playerName, setPlayerName] = useState('player');
@@ -311,7 +311,7 @@ function App() {
         <input
           type='text'
           placeholder='Your Name'
-          className='bg-gray-600 text-white'
+          className='bg-gray-600 text-white p-2 rounded-sm'
           onChange={(e) => setPlayerName(e.target.value)}
         />}
       {!isPlaying && isNewGame &&
@@ -411,6 +411,8 @@ function App() {
           Replay
         </button>
       }
+      {/* bgm  */}
+      <MusicPlayer song={'/02. Surrounded.mp3'} />
     </div>
 
   );
