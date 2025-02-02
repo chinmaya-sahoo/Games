@@ -450,8 +450,8 @@ function App() {
 
       {/* info Box  */}
       <div className="fixed right-4 top-[60%] -translate-y-1/2 
-  w-48 sm:w-56 md:w-64 
-  bg-gray-800 p-2 sm:p-3 md:p-4 rounded-lg shadow-lg border border-gray-700">
+      w-48 sm:w-56 md:w-64 
+      bg-gray-800 p-2 sm:p-3 md:p-4 rounded-lg shadow-lg border border-gray-700">
 
         <h3 className="text-sm sm:text-base md:text-lg font-bold text-gray-300 border-b pb-1 sm:pb-2 mb-1 sm:mb-2">
           Game Updates
