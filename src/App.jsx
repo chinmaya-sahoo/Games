@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import './App.css';
+import AutoPlaySong from './components/AutoPlaySong';
 
 function App() {
-  const [playerName, setPlayerName] = useState('');
+  const [playerName, setPlayerName] = useState('player');
   const [playerHealth, setPlayerHealth] = useState(4);
   const [dealerHealth, setDealerHealth] = useState(4);
   const [isLive, setIsLive] = useState(true);
@@ -19,6 +20,7 @@ function App() {
   const [isHealable, setIsHealable] = useState(true);
   const [playerTurn, setPlayerTurn] = useState(true);
   const [isGameOver, setIsGameOver] = useState(false);
+  const [isNewGame, setIsNewGame] = useState(true)
   const [doubleDamage, setDoubleDamage] = useState(false); // State for 2X damage
   // const [dealerItem, setDealerItem] = useState({
   //   cigar: 0,
@@ -142,6 +144,7 @@ function App() {
   };
 
   const handelStart = () => {
+    setIsNewGame(false);
     setIsPlaying(true);
     reload(); // Call the reload function to handle bullet setup
     setPlayerTurn(true); // Reset to player's turn at the start
@@ -311,7 +314,7 @@ function App() {
           className='bg-gray-600 text-white'
           onChange={(e) => setPlayerName(e.target.value)}
         />}
-      {!isPlaying &&
+      {!isPlaying && isNewGame &&
         <button className='bg-green-700 py-1 px-3 rounded-md' onClick={handelStart}>
           Start
         </button>}
@@ -321,15 +324,15 @@ function App() {
         <div>
           {playerName &&
             <h1
-            className="bg-black text-center font-semibold text-sm sm:text-base md:text-lg lg:text-xl text-red-600 tracking-widest rounded-sm uppercase font-blood inline-block p-1 sm:p-2 md:p-3 border-4 border-red-700 opacity-60 player"
-          >
-            {playerName} V/S Dealer
-          </h1>
-          
+              className="bg-black text-center font-semibold text-sm sm:text-base md:text-lg lg:text-xl text-red-600 tracking-widest rounded-sm uppercase font-blood inline-block p-1 sm:p-2 md:p-3 border-4 border-red-700 opacity-60 player"
+            >
+              {playerName} V/S Dealer
+            </h1>
+
           }
           {/* health */}
           <div className='flex justify-between'>
-            <div className='flex flex-col items-center gap-2 m-2 p-health bg-green-500 p-4'>
+            <div className='flex flex-col items-center gap-2 m-2 p-health bg-transparent p-4'>
               <h1>Your Health: {playerHealth}</h1>
               <div className="flex justify-between mt-3 gap-4">
                 <button
@@ -386,7 +389,7 @@ function App() {
               {/* Items section ends */}
             </div>
 
-            <div className='flex flex-col justify-center mt-5 gap-2 h-20 py-1 px-3 rounded-md bg-red-500 d-health'>
+            <div className='flex flex-col justify-center mt-5 gap-2 h-20 py-1 px-3 rounded-md bg-transparent d-health'>
               <h1>Dealer's Health: {dealerHealth}</h1>
             </div>
           </div>
@@ -396,6 +399,7 @@ function App() {
             <h1>Remaining Bullets: {bullets.length - currentBulletIndex}</h1>
             <h2>Next Bullet: {bullets[currentBulletIndex] || 'None'}</h2>
           </div>
+          {/* dealer image  */}
           <div className='dealer'>
             <img className='w-[120px]' src="/dealer.png" alt="" />
           </div>
@@ -407,7 +411,6 @@ function App() {
           Replay
         </button>
       }
-      {/* dealer image  */}
     </div>
 
   );
