@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import './App.css';
 import MusicPlayer from './components/MusicPlayer';
+import { Slice , Search , Pill ,Cigarette } from 'lucide-react';
 
 function App() {
   const [infoMessages, setInfoMessages] = useState([]);
@@ -388,35 +389,35 @@ function App() {
 
               <div className='flex justify-between gap-2 mt-3'>
                 <button
-                  className={`cursor-pointer rounded-lg bg-purple-700 p-2 ${playerTurn && isAllowed && playerItem.cigar > 0 ? '' : 'opacity-50'}`}
+                  className={`cursor-pointer rounded-[50%] bg-black p-2 ${playerTurn && isAllowed && playerItem.cigar > 0 ? '' : 'opacity-50'}`}
                   onClick={useCigar}
                   disabled={!playerTurn || !isAllowed || playerItem.cigar <= 0}
                 >
-                  Cigar<br />{playerItem.cigar}
+                  <Cigarette size={34} />{playerItem.cigar}
                 </button>
 
                 <button
-                  className={`cursor-pointer rounded-lg bg-purple-700 p-2 ${playerTurn && isAllowed && playerItem.pill > 0 ? '' : 'opacity-50'}`}
+                  className={`cursor-pointer rounded-[50%] bg-black p-2 ${playerTurn && isAllowed && playerItem.pill > 0 ? '' : 'opacity-50'}`}
                   onClick={usePill}
                   disabled={!playerTurn || !isAllowed || playerItem.pill <= 0}
                 >
-                  Pill<br />{playerItem.pill}
+                  <Pill size={34} />{playerItem.pill}
                 </button>
 
                 <button
-                  className={`cursor-pointer rounded-lg bg-purple-700 p-2 ${playerTurn && isAllowed && playerItem.knife > 0 ? '' : 'opacity-50'}`}
+                  className={`cursor-pointer rounded-[50%] bg-black p-2 ${playerTurn && isAllowed && playerItem.knife > 0 ? '' : 'opacity-50'}`}
                   onClick={useKnife}
                   disabled={!playerTurn || !isAllowed || playerItem.knife <= 0}
                 >
-                  Knife<br />{playerItem.knife}
+                  <Slice size={34} />{playerItem.knife}
                 </button>
 
                 <button
-                  className={`cursor-pointer rounded-lg bg-purple-700 p-2 ${playerTurn && isAllowed && playerItem.magnify > 0 ? '' : 'opacity-50'}`}
+                  className={`cursor-pointer rounded-[50%] bg-black p-2 ${playerTurn && isAllowed && playerItem.magnify > 0 ? '' : 'opacity-50'}`}
                   onClick={useMagnify}
                   disabled={!playerTurn || !isAllowed || playerItem.magnify <= 0}
                 >
-                  Magnifying Glass<br />{playerItem.magnify}
+                  <Search size={34} />{playerItem.magnify}
                 </button>
               </div>
 
