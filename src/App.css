@@ -3,7 +3,7 @@
     margin: 0;
 }
 .bg{
-    background-image: url('bg.png');
+    background-image: url('/bg.png');
     background-size: cover;  /* or use background-size: 100% 100%; */
     background-position: center;
     background-repeat: no-repeat;
