@@ -353,10 +353,10 @@ function App() {
           onChange={(e) => setPlayerName(e.target.value)}
         />}
       {!isPlaying && isNewGame &&
-        <button className='bg-green-700 py-1 px-3 rounded-md' onClick={handelStart}>
-          {/* <PlayButton onClick={handelStart} /> */}
-          Start
-        </button>}
+        <button className='' onClick={handelStart}>
+        <PlayButton content={"P L A Y"}/> 
+        </button>
+      }
 
       {/* game status */}
       {isPlaying &&
@@ -373,20 +373,20 @@ function App() {
           <div className='flex justify-between'>
             <div className='flex flex-col items-center gap-2 m-2 p-health bg-transparent p-4'>
               <h1>Your Health: {playerHealth}</h1>
-              <div className="flex justify-between mt-3 gap-4">
+              <div className="flex justify-between mt-3 gap-10">
                 <button
-                  className={`cursor-pointer rounded-lg bg-purple-700 p-2 ${playerTurn && isAllowed ? '' : 'opacity-50'}`}
+                  className={`cursor-pointer rounded-lg p-2 ${playerTurn && isAllowed ? '' : 'opacity-50'}`}
                   onClick={handelSelfShoot}
                   disabled={!playerTurn || !isAllowed}
                 >
-                  Shoot-Self
+                <PlayButton content={"SHOOT-SELF"}/>
                 </button>
                 <button
-                  className={`cursor-pointer rounded-lg bg-purple-700 p-2 ${playerTurn && isAllowed ? '' : 'opacity-50'}`}
+                  className={`cursor-pointer rounded-lg  p-2 ${playerTurn && isAllowed ? '' : 'opacity-50'}`}
                   onClick={handelDealerShoot}
                   disabled={!playerTurn || !isAllowed}
                 >
-                  Shoot-Dealer
+                  <PlayButton content={"SHOOT-DEALER"}/>
                 </button>
               </div>
               {/* Items section starts */}
@@ -448,8 +448,8 @@ function App() {
 
       {/* Replay Option */}
       {isGameOver &&
-        <button className='bg-blue-700 py-1 px-3 rounded-md' onClick={handelReplay}>
-          Replay
+        <button className='' onClick={handelReplay}>
+          <PlayButton content={"R E P L A Y"}/>
         </button>
       }
       {/* bgm  */}

@@ -1,10 +1,10 @@
 import React from "react";
 import "./PlayButton.css"; // Ensure to create and import the CSS file
 
-const PlayButton = () => {
+const PlayButton = ({content}) => {
   return (
     <button>
-      P L A Y
+      {content}
       <div id="clip">
         <div id="leftTop" class="corner"></div>
         <div id="rightBottom" class="corner"></div>
