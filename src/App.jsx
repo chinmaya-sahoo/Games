@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Slice, Search, Pill, Cigarette } from 'lucide-react';
 import './App.css';
 import MusicPlayer from './components/MusicPlayer';
@@ -38,6 +38,29 @@ function App() {
     knife: 0,
     magnify: 0
   });
+
+  // bgm handler starts
+  const blankRef = useRef(null);
+  const liveRef = useRef(null);
+  const reloadRef = useRef(null);
+
+  const blankShootMusic = () => {
+    if (blankRef.current) {
+      blankRef.current.play();
+    }
+  };
+  const liveShootMusic = () => {
+    if (liveRef.current) {
+      liveRef.current.play();
+    }
+  };
+  const reloadMusic = () => {
+    if (reloadRef.current) {
+      reloadRef.current.play();
+    }
+  };
+  // bgm handler ends
+
 
   //information box starts
   const addInfoMessage = (message) => {
@@ -95,9 +118,11 @@ function App() {
         setPlayerHealth((prev) => Math.max(prev - 1, 0)); // Player loses health
         setLiveBullet((prev) => prev - 1);
         addInfoMessage('Dealer shoots you with a live bullet');
+        liveShootMusic()
       } else {
         setBlankBullet((prev) => prev - 1);
         addInfoMessage('Dealer shoots you with a blank bullet');
+        blankShootMusic()
       }
       setPlayerTurn(true); // Player gets the next turn
       setTotalBullet((prev) => prev - 1);
@@ -114,10 +139,12 @@ function App() {
         setLiveBullet((prev) => prev - 1);
         setPlayerTurn(true); // Player gets the next turn
         addInfoMessage('Dealer shoots himself with a live bullet');
+        liveShootMusic()
       } else {
         setBlankBullet((prev) => prev - 1);
         setPlayerTurn(false); // Dealer gets the next turn
         addInfoMessage('Dealer shoots himself with a blank bullet');
+        blankShootMusic()
       }
       setTotalBullet((prev) => prev - 1);
       setCurrentBulletIndex((prev) => prev + 1);
@@ -145,6 +172,7 @@ function App() {
   // starts ,Replay and reload section starts 
   const reload = () => {
     setTimeout(() => {
+      reloadMusic()
       const liveCount = genRandomNumber();
       const blankCount = genRandomNumber();
       const shuffledBullets = shuffleBullets(liveCount, blankCount);
@@ -186,6 +214,7 @@ function App() {
     setDealerHealth(4);
 
     // Reset Bullets
+    reloadMusic()
     const liveCount = genRandomNumber();
     const blankCount = genRandomNumber();
     const shuffledBullets = shuffleBullets(liveCount, blankCount);
@@ -230,9 +259,11 @@ function App() {
         setDoubleDamage(false); // Reset double damage
         setPlayerTurn(false);
         addInfoMessage('You shoot yourself with a live bullet');
+        liveShootMusic()
       } else {
         setBlankBullet((prev) => prev - 1);
         addInfoMessage('You shoot yourself with a blank bullet');
+        blankShootMusic();
       }
       setTotalBullet((prev) => prev - 1);
       setCurrentBulletIndex((prev) => prev + 1);
@@ -252,9 +283,11 @@ function App() {
         setLiveBullet((prev) => prev - 1);
         setDoubleDamage(false); // Reset double damage
         addInfoMessage('you shoot dealer with a live bullet')
+        liveShootMusic()
       } else {
         setBlankBullet((prev) => prev - 1);
         addInfoMessage('you shoot dealer with a blank bullet')
+        blankShootMusic()
       }
       setTotalBullet((prev) => prev - 1);
       setCurrentBulletIndex((prev) => prev + 1);
@@ -354,7 +387,7 @@ function App() {
         />}
       {!isPlaying && isNewGame &&
         <button className='' onClick={handelStart}>
-        <PlayButton content={"P L A Y"}/> 
+          <PlayButton content={"P L A Y"} />
         </button>
       }
 
@@ -372,21 +405,21 @@ function App() {
           {/* health */}
           <div className='flex justify-between'>
             <div className='flex flex-col items-center gap-2 m-2 p-health bg-transparent p-4'>
-              <h1>Your Health: {playerHealth}</h1>
+              <h1>Your Health:  {Array(playerHealth).fill('❤️').join(' ')}</h1>
               <div className="flex justify-between mt-3 gap-10">
                 <button
                   className={`cursor-pointer rounded-lg p-2 ${playerTurn && isAllowed ? '' : 'opacity-50'}`}
                   onClick={handelSelfShoot}
                   disabled={!playerTurn || !isAllowed}
                 >
-                <PlayButton content={"SHOOT-SELF"}/>
+                  <PlayButton content={"SHOOT-SELF"} />
                 </button>
                 <button
                   className={`cursor-pointer rounded-lg  p-2 ${playerTurn && isAllowed ? '' : 'opacity-50'}`}
                   onClick={handelDealerShoot}
                   disabled={!playerTurn || !isAllowed}
                 >
-                  <PlayButton content={"SHOOT-DEALER"}/>
+                  <PlayButton content={"SHOOT-DEALER"} />
                 </button>
               </div>
               {/* Items section starts */}
@@ -431,7 +464,7 @@ function App() {
             </div>
 
             <div className='flex flex-col justify-center mt-5 gap-2 h-20 py-1 px-3 rounded-md bg-transparent d-health'>
-              <h1>Dealer's Health: {dealerHealth}</h1>
+              <h1>Dealer's Health: {Array(dealerHealth).fill('❤️').join(' ')}</h1>
             </div>
           </div>
 
@@ -449,7 +482,7 @@ function App() {
       {/* Replay Option */}
       {isGameOver &&
         <button className='' onClick={handelReplay}>
-          <PlayButton content={"R E P L A Y"}/>
+          <PlayButton content={"R E P L A Y"} />
         </button>
       }
       {/* bgm  */}
@@ -473,8 +506,10 @@ function App() {
         </div>
       </div>
 
-      {/* button  */}
-      {/* <PlayButton /> */}
+      {/* music section  */}
+      <audio ref={blankRef} src="/blank_shoot.mp3" preload="auto" />
+      <audio ref={liveRef} src="/live_shoot.mp3" preload="auto" />
+      <audio ref={reloadRef} src="/reload.mp3" preload="auto" />
     </div>
 
   );
