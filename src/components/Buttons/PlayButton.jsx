@@ -1,18 +1,18 @@
 import React from "react";
 import "./PlayButton.css"; // Ensure to create and import the CSS file
 
-const PlayButton = ({content}) => {
+const PlayButton = () => {
   return (
-    <button className="play-button">
-      {content}
-      <div className="clip">
-        <div className="corner left-top"></div>
-        <div className="corner right-bottom"></div>
-        <div className="corner right-top"></div>
-        <div className="corner left-bottom"></div>
+    <button>
+      P L A Y
+      <div id="clip">
+        <div id="leftTop" class="corner"></div>
+        <div id="rightBottom" class="corner"></div>
+        <div id="rightTop" class="corner"></div>
+        <div id="leftBottom" class="corner"></div>
       </div>
-      <span className="arrow right-arrow"></span>
-      <span className="arrow left-arrow"></span>
+      <span id="rightArrow" class="arrow"></span>
+      <span id="leftArrow" class="arrow"></span>
     </button>
   );
 };

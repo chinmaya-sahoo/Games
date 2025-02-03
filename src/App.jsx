@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
+import { Slice, Search, Pill, Cigarette } from 'lucide-react';
 import './App.css';
 import MusicPlayer from './components/MusicPlayer';
-import { Slice , Search , Pill ,Cigarette } from 'lucide-react';
+import PlayButton from './components/Buttons/PlayButton';
 
 function App() {
   const [infoMessages, setInfoMessages] = useState([]);
@@ -353,6 +354,7 @@ function App() {
         />}
       {!isPlaying && isNewGame &&
         <button className='bg-green-700 py-1 px-3 rounded-md' onClick={handelStart}>
+          {/* <PlayButton onClick={handelStart} /> */}
           Start
         </button>}
 
@@ -391,15 +393,17 @@ function App() {
 
               <div className='flex justify-between gap-2 mt-3'>
                 <button
-                  className={`cursor-pointer rounded-[50%] bg-black p-2 ${playerTurn && isAllowed && playerItem.cigar > 0 ? '' : 'opacity-50'}`}
+                  className={`cursor-pointer rounded-full bg-black p-2 w-16 h-16 flex flex-col items-center justify-center ${playerTurn && isAllowed && playerItem.cigar > 0 ? '' : 'opacity-50'
+                    }`}
                   onClick={useCigar}
                   disabled={!playerTurn || !isAllowed || playerItem.cigar <= 0}
                 >
-                  <Cigarette size={34} />{playerItem.cigar}
+                  <Cigarette size={34} />
+                  {playerItem.cigar}
                 </button>
 
                 <button
-                  className={`cursor-pointer rounded-[50%] bg-black p-2 ${playerTurn && isAllowed && playerItem.pill > 0 ? '' : 'opacity-50'}`}
+                  className={`cursor-pointer rounded-full bg-black p-2 w-16 h-16 flex flex-col items-center justify-center  ${playerTurn && isAllowed && playerItem.pill > 0 ? '' : 'opacity-50'}`}
                   onClick={usePill}
                   disabled={!playerTurn || !isAllowed || playerItem.pill <= 0}
                 >
@@ -407,7 +411,7 @@ function App() {
                 </button>
 
                 <button
-                  className={`cursor-pointer rounded-[50%] bg-black p-2 ${playerTurn && isAllowed && playerItem.knife > 0 ? '' : 'opacity-50'}`}
+                  className={`cursor-pointer rounded-full bg-black p-2 w-16 h-16 flex flex-col items-center justify-center  ${playerTurn && isAllowed && playerItem.knife > 0 ? '' : 'opacity-50'}`}
                   onClick={useKnife}
                   disabled={!playerTurn || !isAllowed || playerItem.knife <= 0}
                 >
@@ -415,7 +419,7 @@ function App() {
                 </button>
 
                 <button
-                  className={`cursor-pointer rounded-[50%] bg-black p-2 ${playerTurn && isAllowed && playerItem.magnify > 0 ? '' : 'opacity-50'}`}
+                  className={`cursor-pointer rounded-full bg-black p-2 w-16 h-16 flex flex-col items-center justify-center ${playerTurn && isAllowed && playerItem.magnify > 0 ? '' : 'opacity-50'}`}
                   onClick={useMagnify}
                   disabled={!playerTurn || !isAllowed || playerItem.magnify <= 0}
                 >
@@ -468,6 +472,9 @@ function App() {
           ))}
         </div>
       </div>
+
+      {/* button  */}
+      {/* <PlayButton /> */}
     </div>
 
   );
