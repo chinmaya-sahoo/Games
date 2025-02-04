@@ -8,7 +8,7 @@ function App() {
   const [infoMessages, setInfoMessages] = useState([]);
   const [playerName, setPlayerName] = useState('player');
   const [playerHealth, setPlayerHealth] = useState(4);
-  const [dealerHealth, setDealerHealth] = useState(4);
+  const [dealerHealth, setDealerHealth] = useState(6);
   const [isLive, setIsLive] = useState(true);
   const [isBlank, setIsBlank] = useState(true);
   const [liveBullet, setLiveBullet] = useState(4);
@@ -211,7 +211,8 @@ function App() {
 
     // Reset Player & Dealer Health
     setPlayerHealth(4);
-    setDealerHealth(4);
+    setDealerHealth(6);
+    setIsHealable(true);
 
     // Reset Bullets
     reloadMusic()
@@ -304,7 +305,7 @@ function App() {
   // ItemHandler fuction starts
   const assignRandomItems = () => {
     // Define the total number of items to assign
-    const totalItems = 5;
+    const totalItems = 2;
 
     // Initialize a temporary object to hold the items
     const tempItems = { cigar: 0, pill: 0, knife: 0, magnify: 0 };
