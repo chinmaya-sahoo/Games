@@ -97,9 +97,20 @@ function App() {
 
   // dealer's move predictor
   const dealersMove = () => {
+    // if (dealerHealth > 0) {
+    //   const randomDecision = Math.random(); // Generate a random value between 0 and 1
+    //   if (randomDecision < 0.5) {
+    //     // 50% chance of shooting the player
+    //     setTimeout(() => handleDealerShootPlayer(), 3000); // Dealer shoots player
+    //   } else {
+    //     // 50% chance of shooting themselves
+    //     setTimeout(() => handleDealerShootSelf(), 3000); // Dealer shoots themselves
+    //   }
+
+    // }
+    //better logic for dealer's move
     if (dealerHealth > 0) {
-      const randomDecision = Math.random(); // Generate a random value between 0 and 1
-      if (randomDecision < 0.5) {
+      if (liveBullet >= blankBullet) {
         // 50% chance of shooting the player
         setTimeout(() => handleDealerShootPlayer(), 3000); // Dealer shoots player
       } else {
@@ -192,6 +203,10 @@ function App() {
   };
 
   const handelStart = () => {
+    if(window.outerWidth < 450){
+      alert('Please use a desktop site to play this game with better experience.')
+      // return
+    }
     setIsNewGame(false);
     setIsPlaying(true);
     reload(); // Call the reload function to handle bullet setup
