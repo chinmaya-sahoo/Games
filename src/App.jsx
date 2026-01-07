@@ -515,7 +515,7 @@ function App() {
 
         <div className="space-y-1 max-h-40 sm:max-h-48 overflow-y-auto">
           {infoMessages.map((msg, index) => (
-            <div key={index} className="p-1 sm:p-2 bg-gray-700 rounded-lg fade-in text-xs sm:text-sm">
+            <div key={index} className="p-1 sm:p-2 bg-gray-800 rounded-lg fade-in text-xs sm:text-sm text-gray-100 ">
               {msg}
             </div>
           ))}
